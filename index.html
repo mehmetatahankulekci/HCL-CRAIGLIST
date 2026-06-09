@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Craigslist — Interactive Prototype</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.30.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span class="icon-btn backbtn" id="backBtn" title="Back" style="display:none"><i class="ti ti-arrow-left"></i></span>
+      <div class="brand" data-nav="home"><i class="ti ti-peace"></i><span>craigslist</span></div>
+      <div class="loc"><i class="ti ti-map-pin" style="font-size:14px"></i> New York <i class="ti ti-chevron-down" style="font-size:14px"></i></div>
+    </div>
+    <div class="topright">
+      <button class="btn btn-primary"><i class="ti ti-plus" style="font-size:14px"></i> Post Ad</button>
+      <span class="icon-btn" id="favBtn"><i class="ti ti-heart"></i><span class="dot" id="favCount" style="display:none">0</span></span>
+      <i class="ti ti-bell icon-btn"></i>
+      <div class="avatar">JM</div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <section id="view-home" class="view active">
+    <div class="hero">
+      <h2>What are you looking for?</h2>
+      <p>Search across all of New York</p>
+      <div class="search">
+        <i class="ti ti-search"></i>
+        <input id="homeSearch" type="text" placeholder="Try 'MacBook under $300' or 'Brooklyn apartment'">
+        <button id="homeSearchBtn">Search</button>
+      </div>
+      <div class="trend">
+        <span class="lbl">Trending:</span>
+        <a data-search="MacBook">MacBook</a><span class="dot">·</span>
+        <a data-search="Studio apartment">Studio apartment</a><span class="dot">·</span>
+        <a data-search="BMW SUV">BMW SUV</a><span class="dot">·</span>
+        <a data-search="Tesla">Tesla</a><span class="dot">·</span>
+        <a data-search="Williamsburg">Williamsburg</a>
+      </div>
+    </div>
+    <div class="section-pad" style="background:var(--bg2)">
+      <h3>Browse categories</h3>
+      <div class="cat-grid">
+        <div class="cat" data-nav="housing"><div class="ic" style="background:#E6F1FB"><i class="ti ti-home" style="font-size:18px;color:#185FA5"></i></div><div class="nm">Housing</div><div class="ds">For rent · For sale</div></div>
+        <div class="cat" data-nav="forsale"><div class="ic" style="background:#EAF3DE"><i class="ti ti-tag" style="font-size:18px;color:#3B6D11"></i></div><div class="nm">For Sale</div><div class="ds">Electronics, furniture</div></div>
+        <div class="cat" data-nav="cars"><div class="ic" style="background:#FAEEDA"><i class="ti ti-car" style="font-size:18px;color:#854F0B"></i></div><div class="nm">Vehicles</div><div class="ds">Cars · Bikes · Boats</div></div>
+        <div class="cat" data-nav="jobs"><div class="ic" style="background:#EEEDFE"><i class="ti ti-briefcase" style="font-size:18px;color:#534AB7"></i></div><div class="nm">Jobs</div><div class="ds">Full-time · Gigs</div></div>
+        <div class="cat" data-nav="services"><div class="ic" style="background:#E1F5EE"><i class="ti ti-tool" style="font-size:18px;color:#0F6E56"></i></div><div class="nm">Services</div><div class="ds">Repair · Moving</div></div>
+        <div class="cat" data-nav="community"><div class="ic" style="background:#FBEAF0"><i class="ti ti-users" style="font-size:18px;color:#993556"></i></div><div class="nm">Community</div><div class="ds">Events · Groups</div></div>
+        <div class="cat" data-nav="forums"><div class="ic" style="background:#FAECE7"><i class="ti ti-message-circle" style="font-size:18px;color:#993C1D"></i></div><div class="nm">Forums</div><div class="ds">Discussions</div></div>
+        <div class="cat" id="catFree"><div class="ic" style="background:#F1EFE8"><i class="ti ti-gift" style="font-size:18px;color:#444441"></i></div><div class="nm">Free Stuff</div><div class="ds">Giveaways</div></div>
+      </div>
+    </div>
+    <div class="section-pad" style="background:var(--bg2);padding-top:4px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h3 style="margin:0">Trending in New York</h3>
+        <span style="font-size:12px;color:var(--blue);cursor:pointer" data-nav="cars">See all <i class="ti ti-arrow-right" style="font-size:12px"></i></span>
+      </div>
+      <div class="trending-grid" id="homeTrending"></div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span><span>About</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- CARS -->
+  <section id="view-cars" class="view">
+    <div class="crumb"><a data-nav="home">For Sale</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Cars &amp; Trucks</span></div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-search"></i><input id="carsSearch" type="text" placeholder="Search make, model, neighborhood…"><button id="carsSearchBtn">Search</button></div></div>
+    <div class="chipbar" id="carsChipbar"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Make</div><select id="makeSel"></select></div>
+        <div class="fgroup"><div class="flabel">Model <span style="font-weight:500;text-transform:none;color:var(--muted2)">(pick one or more)</span></div>
+          <details class="modeldd" id="modelDD"><summary><span id="modelSummary">Any model</span><i class="ti ti-chevron-down"></i></summary><div class="modelopts" id="modelOpts"></div></details>
+        </div>
+        <div class="fgroup"><div class="flabel">Body type</div><div class="chipset" id="bodyChips"></div></div>
+        <div class="fgroup"><div class="flabel">Year</div><div class="row2"><input class="txtin" id="yearFrom" placeholder="from"><span>—</span><input class="txtin" id="yearTo" placeholder="to"></div></div>
+        <div class="fgroup"><div class="flabel">Price ($)</div><div class="row2"><input class="txtin" id="priceMin" placeholder="min"><span>—</span><input class="txtin" id="priceMax" placeholder="max"></div></div>
+        <div class="fgroup"><div class="flabel">Max mileage</div><select id="mileageSel"><option value="">Any</option><option value="30">Under 30k</option><option value="60">Under 60k</option><option value="90">Under 90k</option><option value="120">Under 120k</option></select></div>
+        <div class="fgroup"><div class="flabel">Color</div><div class="colors" id="colorSwatches"></div></div>
+        <div class="fgroup"><div class="flabel">Trust</div>
+          <label class="check"><input type="checkbox" id="verifiedOnly"> Verified sellers only</label>
+          <label class="check"><input type="checkbox" id="dealerOnly"> Dealers only</label>
+        </div>
+        <div class="applybtn"><i class="ti ti-bolt" style="color:#3B6D11"></i> Filters auto-apply</div>
+      </div>
+      <div class="results">
+        <div class="results-head">
+          <div class="cnt"><b id="carCount">0</b> matching listings</div>
+          <select class="sortsel" id="carSort"><option value="best">Sort: Best match</option><option value="plow">Price: Low to High</option><option value="phigh">Price: High to Low</option><option value="ynew">Year: Newest</option><option value="mlow">Mileage: Lowest</option></select>
+        </div>
+        <div class="listing-grid" id="carGrid"></div>
+        <div class="loadmore" id="carMore"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- CAR DETAIL -->
+  <section id="view-listing" class="view">
+    <div class="crumb"><a data-nav="home">For Sale</a><i class="ti ti-chevron-right"></i><a data-nav="cars">Cars &amp; Trucks</a><i class="ti ti-chevron-right"></i><span id="dTitleCrumb" style="color:var(--ink);font-weight:600"></span></div>
+    <div class="detail">
+      <div class="detail-top">
+        <div>
+          <div class="gallery-main" id="dMain"></div>
+          <div class="thumbs" id="dThumbs"></div>
+        </div>
+        <div class="buybox">
+          <div class="ttl" id="dTtl"></div>
+          <div class="sub" id="dSub"></div>
+          <div class="price" id="dPrice"></div>
+          <button class="btn btn-primary cta" data-contact><i class="ti ti-message"></i> Contact Seller</button>
+          <button class="alt" data-toast="Phone: (917) 555-0•••  — demo"><i class="ti ti-phone"></i> Show Phone Number</button>
+          <button class="alt" id="dSave"><i class="ti ti-heart"></i> Save listing</button>
+          <div class="sellercard">
+            <div class="av" id="dSellerAv">MR</div>
+            <div style="flex:1">
+              <div style="font-weight:600;display:flex;align-items:center;gap:7px"><span id="dSellerName"></span> <span id="dSellerVer" style="font-size:11px;color:var(--green);display:inline-flex;align-items:center;gap:3px"><i class="ti ti-rosette-discount-check-filled"></i>Verified</span></div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px" id="dSellerMeta"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sectitle">Description</div>
+      <div class="desc" id="dDesc"></div>
+
+      <div class="sectitle">Vehicle details</div>
+      <div class="vgrid" id="dVgrid"></div>
+
+      <div class="sectitle">Highlights</div>
+      <div class="hl" id="dHl"></div>
+
+      <div style="margin-top:18px;background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div style="font-size:13px"><i class="ti ti-file-description" style="color:var(--blue)"></i> &nbsp;<b>Vehicle History Report</b> — <span id="dVin"></span> · No accidents · 1 previous owner</div>
+        <button class="alt" style="width:auto;margin:0" data-toast="CarFax report — demo">View report</button>
+      </div>
+
+      <div class="safety">
+        <div class="h"><i class="ti ti-shield-check"></i> Stay safe when buying</div>
+        <div>Inspect the vehicle in person before buying</div>
+        <div>Meet in a public place (police-station preferred)</div>
+        <div>Never wire money or pay before seeing the car</div>
+      </div>
+
+      <div class="sectitle">Similar listings</div>
+      <div class="similar" id="dSimilar"></div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- HOUSING -->
+  <section id="view-housing" class="view">
+    <div class="crumb"><a data-nav="home">Housing</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Apartments</span>
+      <div style="margin-left:auto" class="segmented" id="houseMode">
+        <div class="seg on" data-mode="rent">For Rent</div><div class="seg" data-mode="sale">For Sale</div><div class="seg" data-mode="short">Short-term</div>
+      </div>
+    </div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-map-pin"></i><input id="houseSearch" type="text" placeholder="City or neighborhood, e.g. Brooklyn"><button id="houseSearchBtn">Search</button></div></div>
+    <div class="chipbar" id="houseChipbar"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Neighborhood</div><select id="hoodSel"></select></div>
+        <div class="fgroup"><div class="flabel">Bedrooms</div><div class="chipset" id="bedChips"></div></div>
+        <div class="fgroup"><div class="flabel">Max price / mo</div><input class="txtin" id="rentMax" placeholder="e.g. 2500"></div>
+        <div class="fgroup"><div class="flabel">Furnished</div><div class="chipset" id="furnChips"><div class="chip" data-furn="Furnished">Furnished</div><div class="chip" data-furn="Unfurnished">Unfurnished</div></div></div>
+        <div class="fgroup"><div class="flabel">Amenities</div>
+          <label class="check"><input type="checkbox" data-amen="In-unit laundry"> In-unit laundry</label>
+          <label class="check"><input type="checkbox" data-amen="Air conditioning"> Air conditioning</label>
+          <label class="check"><input type="checkbox" data-amen="Pets allowed"> Pets allowed</label>
+          <label class="check"><input type="checkbox" data-amen="Dishwasher"> Dishwasher</label>
+        </div>
+        <div class="fgroup"><div class="flabel">Fees</div><label class="check"><input type="checkbox" id="noFee"> No broker fee</label></div>
+        <div class="applybtn"><i class="ti ti-bolt" style="color:#3B6D11"></i> Filters auto-apply + persist</div>
+      </div>
+      <div class="results">
+        <div class="results-head"><div class="cnt"><b id="houseCount">0</b> apartments match</div>
+          <select class="sortsel" id="houseSort"><option value="best">Sort: Best match</option><option value="plow">Price: Low to High</option><option value="phigh">Price: High to Low</option><option value="sqft">Largest first</option></select>
+        </div>
+        <div class="listing-grid" id="houseGrid"></div>
+        <div class="loadmore" id="houseMore"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- COMPUTERS -->
+  <section id="view-computers" class="view">
+    <div class="crumb"><a data-nav="home">For Sale</a><i class="ti ti-chevron-right"></i><span>Electronics</span><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Laptops</span></div>
+    <div class="tabs" id="compTabs">
+      <div class="tab on" data-tab="Laptops">Laptops</div><div class="tab" data-tab="Desktops">Desktops</div>
+      <div class="tab" data-tab="Monitors">Monitors</div><div class="tab" data-tab="Components">Components</div><div class="tab" data-tab="Accessories">Accessories</div>
+    </div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-search"></i><input id="compSearch" type="text" placeholder="Search laptops…" value="MacBook under $300"><button id="compSearchBtn">Search</button></div></div>
+    <div class="smartbar"><i class="ti ti-sparkles" style="color:var(--purple)"></i> Smart search detected: <b>Apple MacBook</b> · max price <b>$300</b> · <span class="lt">accessories excluded</span></div>
+    <div class="chipbar" id="compChipbar"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Brand</div><select id="brandSel"></select></div>
+        <div class="fgroup"><div class="flabel">Max price ($)</div><input class="txtin" id="compMax" placeholder="e.g. 300"></div>
+        <div class="fgroup"><div class="flabel">RAM</div><div class="chipset" id="ramChips"><div class="chip" data-ram="8">8 GB+</div><div class="chip" data-ram="16">16 GB+</div></div></div>
+        <div class="fgroup"><div class="flabel">Condition</div><div class="chipset" id="condChips"><div class="chip" data-cond="New">New</div><div class="chip" data-cond="Like new">Like new</div><div class="chip" data-cond="Good">Good</div></div></div>
+        <div class="fgroup"><div class="flabel">Exclude</div>
+          <label class="check"><input type="checkbox" checked> Cases &amp; sleeves</label>
+          <label class="check"><input type="checkbox" checked> Keyboards &amp; parts</label>
+          <label class="check"><input type="checkbox" checked> Repair services</label>
+          <label class="check"><input type="checkbox"> Broken / for parts</label>
+        </div>
+        <div class="applybtn"><i class="ti ti-bolt" style="color:#3B6D11"></i> Filters auto-apply</div>
+      </div>
+      <div class="results">
+        <div class="results-head">
+          <div class="cnt"><b id="compTabName">Laptops</b> · <span id="compCount">0</span> results</div>
+          <button class="comparebtn" id="compareBtn" disabled><i class="ti ti-arrows-left-right"></i> Compare (<span id="compareCount">0</span>)</button>
+        </div>
+        <div class="listing-grid" id="compGrid"></div>
+        <div class="empty" id="compEmpty" style="display:none">No listings in this category in the demo.</div>
+        <div class="loadmore" id="compMore"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- FOR SALE -->
+  <section id="view-forsale" class="view">
+    <div class="crumb"><a data-nav="home">Home</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">For Sale</span></div>
+    <div class="tabs" id="fsTabs"></div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-search"></i><input id="fsSearch" type="text" placeholder="Search items for sale…"><button id="fsSearchBtn">Search</button></div></div>
+    <div class="chipbar" id="fsChipbar"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Max price ($)</div><input class="txtin" id="fsMax" placeholder="any"></div>
+        <div class="fgroup"><div class="flabel">Condition</div><div class="chipset" id="fsCond"><div class="chip" data-c="New">New</div><div class="chip" data-c="Like new">Like new</div><div class="chip" data-c="Good">Good</div><div class="chip" data-c="Fair">Fair</div></div></div>
+        <div class="fgroup"><div class="flabel">Sort</div><select id="fsSort"><option value="best">Best match</option><option value="plow">Price: Low to High</option><option value="phigh">Price: High to Low</option><option value="new">Newest</option></select></div>
+        <div class="fgroup"><div class="flabel">More</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7"><a class="alt" style="color:var(--blue);cursor:pointer;width:auto;border:none;padding:0;background:none;display:inline" data-nav="computers">› Browse laptops &amp; computers</a></div>
+        </div>
+        <div class="applybtn"><i class="ti ti-bolt" style="color:#3B6D11"></i> Filters auto-apply</div>
+      </div>
+      <div class="results">
+        <div class="results-head"><div class="cnt"><b id="fsCount">0</b> items for sale</div></div>
+        <div class="listing-grid" id="fsGrid"></div>
+        <div class="loadmore" id="fsMore"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- JOBS -->
+  <section id="view-jobs" class="view">
+    <div class="crumb"><a data-nav="home">Home</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Jobs &amp; Gigs</span></div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-search"></i><input id="jobSearch" type="text" placeholder="Search job title or keyword…"><button id="jobSearchBtn">Search</button></div></div>
+    <div class="chipbar" id="jobChipbar"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Category</div><select id="jobField"></select></div>
+        <div class="fgroup"><div class="flabel">Type</div><div class="chipset" id="jobType"><div class="chip" data-t="Full-time">Full-time</div><div class="chip" data-t="Part-time">Part-time</div><div class="chip" data-t="Contract">Contract</div><div class="chip" data-t="Gig">Gig</div></div></div>
+        <div class="fgroup"><div class="flabel">Options</div><label class="check"><input type="checkbox" id="jobRemote"> Remote only</label></div>
+        <div class="fgroup"><div class="flabel">Sort</div><select id="jobSort"><option value="new">Newest</option><option value="payhigh">Pay: High to Low</option></select></div>
+        <div class="applybtn"><i class="ti ti-bolt" style="color:#3B6D11"></i> Filters auto-apply</div>
+      </div>
+      <div class="results">
+        <div class="results-head"><div class="cnt"><b id="jobCount">0</b> openings</div></div>
+        <div class="listing-grid" id="jobGrid"></div>
+        <div class="loadmore" id="jobMore"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="view-services" class="view">
+    <div class="crumb"><a data-nav="home">Home</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Services</span></div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-search"></i><input id="svcSearch" type="text" placeholder="Search services…"><button id="svcSearchBtn">Search</button></div></div>
+    <div class="chipbar" id="svcChipbar"></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Category</div><select id="svcCat"></select></div>
+        <div class="fgroup"><div class="flabel">Sort</div><select id="svcSort"><option value="best">Best match</option><option value="rating">Top rated</option><option value="ratelow">Rate: Low to High</option></select></div>
+        <div class="applybtn"><i class="ti ti-bolt" style="color:#3B6D11"></i> Filters auto-apply</div>
+      </div>
+      <div class="results">
+        <div class="results-head"><div class="cnt"><b id="svcCount">0</b> providers</div></div>
+        <div class="listing-grid" id="svcGrid"></div>
+        <div class="loadmore" id="svcMore"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section id="view-community" class="view">
+    <div class="crumb"><a data-nav="home">Home</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Community</span></div>
+    <div class="tabs" id="commTabs"></div>
+    <div class="filter-head"><div class="filter-search"><i class="ti ti-search"></i><input id="commSearch" type="text" placeholder="Search events, groups, classes…"><button id="commSearchBtn">Search</button></div></div>
+    <div class="chipbar" id="commChipbar"></div>
+    <div class="results" style="padding:16px 20px">
+      <div class="results-head"><div class="cnt"><b id="commCount">0</b> in your community</div></div>
+      <div class="listing-grid" id="commGrid"></div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+  <!-- FORUMS -->
+  <section id="view-forums" class="view">
+    <div class="crumb"><a data-nav="home">Home</a><i class="ti ti-chevron-right"></i><span style="color:var(--ink);font-weight:600">Discussion Forums</span></div>
+    <div class="layout">
+      <div class="sidebar">
+        <div class="fgroup"><div class="flabel">Boards</div><div class="chipset" id="forumBoards" style="flex-direction:column;align-items:stretch"></div></div>
+        <div class="applybtn"><i class="ti ti-message" style="color:#534AB7"></i> Community guidelines apply</div>
+      </div>
+      <div class="results">
+        <div class="results-head"><div class="cnt"><b id="forumCount">0</b> threads</div><button class="comparebtn" data-toast="New thread (demo)"><i class="ti ti-plus"></i> New thread</button></div>
+        <div id="forumGrid"></div>
+      </div>
+    </div>
+    <div class="footer"><div><span>Help</span><span>Safety</span><span>Privacy</span></div><span>© 2026 craigslist</span></div>
+  </section>
+
+</div>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
